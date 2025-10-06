@@ -1,66 +1,40 @@
-# DayPlanner 
-A simple day planner. This implementation focuses on the core concept of organizing activities for a single day with both manual and AI-assisted scheduling.
+# courseFiltering
+This implementation focuses on the core concept of finding courses that allign with the user's needs with both manual and AI-assisted searching.
 
-## Concept: DayPlanner
+## Concept: Course Filtering
 
-**Purpose**: Help you organize activities for a single day  
-**Principle**: You can add activities one at a time, assign them to times, and then observe the completed schedule
+**Purpose**: Enables users to efficiently locate courses relevant to their academic goals by narrowing down a large collection into a manageable set based on categories. 
+**Principle**: Each class begins with a set of system assigned tags, and the user begins with 
+a list of all available classes. The user selects one or more tags, and the filter 
+produces a list of courses that only includes classes matching all selected tags. 
+The user can then add or remove tags and get a new list of courses that only includes 
+classes matching all selected tags. The user can then clear the filters to remove all active tags. 
+In addition to manual filtering, the user may select a course and invoke AI to suggest 
+alternative courses that share overlapping tags.
 
 ### Core State
-- **Activities**: Set of activities with title, duration, and optional startTime
-- **Assignments**: Set of activity-to-time assignments
-- **Time System**: All times in half-hour slots starting at midnight (0 = 12:00 AM, 13 = 6:30 AM)
+- **Courses**: set of tags and attributes like title and professor
+- **Tags**: set of categories with names and ids
+- **A set of Active tags**: a set of tags that the user selected
+- **A set of Filtered courses**: a set of courses that align with the selected tags
+- **A set of Suggested courses**: a set of courses that Gemini has suggested based on a user selected course
 
 ### Core Actions
-- `addActivity(title: string, duration: number): Activity`
-- `removeActivity(activity: Activity)`
-- `assignActivity(activity: Activity, startTime: number)`
-- `unassignActivity(activity: Activity)`
-- `requestAssignmentsFromLLM()` - AI-assisted scheduling with hardwired preferences
+- `AddTag (t: Tag)`
+- `RemoveTag (t: Tag)`
+- `ClearTags()`
+- `suggestAlternatives (courseToSuggest : Course, llm : GeminiLLM, variant : "base" or "timeFocused" or "topicFocused")` - AI-assisted course suggestion with hardwired preferences
+
+
 
 ## Prerequisites
 
 - **Node.js** (version 14 or higher)
-- **TypeScript** (will be installed automatically)
-- **Google Gemini API Key** (free at [Google AI Studio](https://makersuite.google.com/app/apikey))
+- **TypeScript** 
+- **Google Gemini API Key**
 
-## Quick Setup
 
-### 0. Clone the repo locally and navigate to it
-```cd intro-gemini-schedule```
-
-### 1. Install Dependencies
-
-```bash
-npm install
-```
-
-### 2. Add Your API Key
-
-**Why use a template?** The `config.json` file contains your private API key and should never be committed to version control. The template approach lets you:
-- Keep the template file in git (safe to share)
-- Create your own `config.json` locally (keeps your API key private)
-- Easily set up the project on any machine
-
-**Step 1:** Copy the template file:
-```bash
-cp config.json.template config.json
-```
-
-**Step 2:** Edit `config.json` and add your API key:
-```json
-{
-  "apiKey": "YOUR_GEMINI_API_KEY_HERE"
-}
-```
-
-**To get your API key:**
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Sign in with your Google account
-3. Click "Create API Key"
-4. Copy the key and paste it into `config.json` (replacing `YOUR_GEMINI_API_KEY_HERE`)
-
-### 3. Run the Application
+### 3. To run the Application
 
 **Run all test cases:**
 ```bash
@@ -69,114 +43,157 @@ npm start
 
 **Run specific test cases:**
 ```bash
-npm run manual    # Manual scheduling only
-npm run llm       # LLM-assisted scheduling only
-npm run mixed     # Mixed manual + LLM scheduling
+npm run manual    # Manual filtering only
+npm run llm       # LLM-assisted suggestions only
+npm run mixed     # Mixed manual filtering + LLM course suggestions
 ```
 
 ## File Structure
 
 ```
-dayplanner/
+CourseFiltering/
 ├── package.json              # Dependencies and scripts
 ├── tsconfig.json             # TypeScript configuration
 ├── config.json               # Your Gemini API key
-├── dayplanner-types.ts       # Core type definitions
-├── dayplanner.ts             # DayPlanner class implementation
-├── dayplanner-llm.ts         # LLM integration
-├── dayplanner-tests.ts       # Test cases and examples
+├── courseFiltering.ts        # Course Filtering class implementation and core type definitions
+├── gemini-llm.ts             # LLM integration
+├── courseFiltering_tests.ts  # Test cases and examples
 ├── dist/                     # Compiled JavaScript output
 └── README.md                 # This file
 ```
 
 ## Test Cases
 
-The application includes three comprehensive test cases:
 
-### 1. Manual Scheduling
-Demonstrates adding activities and manually assigning them to time slots:
+### Part one Manual
 
-```typescript
-const planner = new DayPlanner();
-const breakfast = planner.addActivity('Breakfast', 1); // 30 minutes
-planner.assignActivity(breakfast, 14); // 7:00 AM
-```
-
-### 2. LLM-Assisted Scheduling
-Shows AI-powered scheduling with hardwired preferences:
+#### 1 Adding and Removing a single Tag
+Demonstrates manually adding and removing a single tag:
 
 ```typescript
-const planner = new DayPlanner();
-planner.addActivity('Morning Jog', 2);
-planner.addActivity('Math Homework', 4);
-await llm.requestAssignmentsFromLLM(planner);
-```
+const rawCourses: Course[] = coursesData as Course[];
+const taggedCourses: Course[] = autoTagCourses(rawCourses);const courseFilter = new CourseFiltering(taggedCourses);
 
-### 3. Mixed Scheduling
-Combines manual assignments with AI assistance for remaining activities.
+const historyTag: Tag = { id: "HIST", category: "Department" };
+courseFilter.addTag(historyTag);
 
-## Sample Output
+courseFilter.removeTag(historyTag);
 
 ```
-📅 Daily Schedule
-==================
-7:00 AM - Breakfast (30 min)
-8:00 AM - Morning Workout (1 hours)
-10:00 AM - Study Session (1.5 hours)
-1:00 PM - Lunch (30 min)
-3:00 PM - Team Meeting (1 hours)
-7:00 PM - Dinner (30 min)
-9:00 PM - Evening Reading (1 hours)
 
-📋 Unassigned Activities
-========================
-All activities are assigned!
+#### 2 Adding and Removing multiple Tags
+Demonstrates manually adding and removing multiple tags:
+
+```typescript
+const rawCourses: Course[] = coursesData as Course[];
+const taggedCourses: Course[] = autoTagCourses(rawCourses);const courseFilter = new CourseFiltering(taggedCourses);
+
+const historyTag: Tag = { id: "HIST", category: "Department" };
+const profTag: Tag = { id: "Guy Rogers", category: "Professor" };
+courseFilter.addTag(historyTag);
+courseFilter.addTag(profTag);
+
+courseFilter.clearTags();
 ```
+
+
+### Part 2 LLM-Assisted Suggestions
+
+#### 1. Base
+Shows Ai suggested courses with a hardwired preference for no prioritization of one quality over another:
+
+```typescript
+const courseToSuggest = taggedCourses[226];
+const suggestions = await courseFilter.suggestAlternatives(courseToSuggest, llm, "base");
+```
+
+My approach in this test was to evaluate how the AI performed with a neutral, general prompt that simply asked for courses “most similar in topic or content.” The LLM produced several suggestions, but many came from unrelated contexts, such as matching a course in english with a course in Chinese. This showed that without explicit guidance, the AI tended to rely on superficial or random overlaps in wording rather than meaningful academic similarity. While the results demonstrated that the base prompt can produce syntactically valid suggestions, it lacked consistent relevance. The main issue remaining is that the model needs clearer constraints to anchor similarity around shared tags or academic categories.
+
+#### 2. Meeting Time
+Shows Ai suggested courses with hardwired preference for prioritization of similar meeting times:
+
+```typescript
+const courseToSuggest = taggedCourses[226];
+const suggestions = await courseFilter.suggestAlternatives(courseToSuggest, llm, "timeFocused");
+```
+
+For this variant, I modified the prompt to emphasize scheduling similarity, asking the AI to find courses that met at the same time and the same days. This approach worked in that the AI successfully returned courses that fit the same time window, demonstrating that it could reason about temporal patterns when provided with that context. However, several of the recommended courses were unrelated in subject matter—often pairing classes from different departments. This revealed a tradeoff between practical scheduling alignment and thematic relevance. The issue that remains is how to balance both dimensions in a single reasoning step, so that time alignment doesn’t overshadow academic similarity.
+
+#### 3. Topic
+Shows Ai suggested courses with hardwired preference for prioritization of similar topics:
+
+```typescript
+const courseToSuggest = taggedCourses[226];
+const suggestions = await courseFilter.suggestAlternatives(courseToSuggest, llm, "topicFocused");
+```
+In this version, I asked the LLM to prioritize conceptual and thematic overlap, directing it to focus on shared keywords or course topics. This produced the most academically appropriate alternatives, as the AI selected courses that clearly connected by theme or subject area. However, some suggested courses were scheduled at completely different times, which would make them impractical as alternatives in a real scheduling scenario. This suggests that while topic-driven reasoning improves academic alignment, it ignores logistical considerations.
+
+
+## Sample Output for Part 1
+
+```
+Active tags: [
+  { id: 'HIST', category: 'Department' },
+  { id: 'Guy Rogers', category: 'Professor' }
+]
+
+Filtered courses: [
+  {
+    course_code: 'HIST 200',
+    section: '01',
+    title: 'Roots of the Western Tradition',
+    professor: 'Guy Rogers',
+    meeting_time: 'TF - 12:45 PM - 2:00 PM',
+    current_enrollment: 14,
+    seats_available: 11,
+    seats_total: 25,
+    distribution: null,
+  },
+  {
+    course_code: 'HIST 325',
+    section: '01',
+    title: '"Veni; Vidi; Vici":  The Life and Times of C. Iulius Caesar',
+    professor: 'Guy Rogers',
+    meeting_time: 'W - 6:30 PM - 9:10 PM',
+    current_enrollment: 14,
+    seats_available: 11,
+    seats_total: 25,
+    distribution: 'HS',
+  }
+]
+```
+
+## Sample Output for Part 2
+```
+Suggested Alternatives: [
+  'Introduction to Classical Chinese (CHIN 310) (MR - 3:45 PM - 5:00 PM)',
+  'Japanese Literature from Myth to Manga (in English) (JPN 251) (MR - 11:20 AM - 12:35 PM)',
+  'Eileen Chang (in English) (CHIN 381) (W - 3:30 PM - 6:10 PM)'
+]
+```
+
+
+## Validators
+During testing, I identified three plausible issues in the AI’s output:
+- The model sometimes “hallucinates” non-existent courses, so I added a validator that checks all returned course codes the known dataset and ensures that the course codes and course titles match.
+- It can occasionally return duplicates, so I added a validator that checks for duplicate courses.
+- It could occasionally recommend the same course being queried, so I added a validator that checks for self-referential results.
+
 
 ## Key Features
-
-- **Simple State Management**: Activities and assignments stored in memory
-- **Flexible Time System**: Half-hour slots from midnight (0-47)
-- **Query-Based Display**: Schedule generated on-demand, not stored sorted
-- **AI Integration**: Hardwired preferences in LLM prompt (no external hints)
-- **Conflict Detection**: Prevents overlapping activities
-- **Clean Architecture**: First principles implementation with no legacy code
+- **Automated Tag Generation**: System assigns tags from course data (department, distribution, professor, and title keywords)
+- **Dynamic Filtering**: Users can add or remove tags to instantly refine visible courses
+- **AI Integration**: Augmented suggestAlternatives action calls Gemini to recommend similar courses
+- **Validation Guardrails**: Detects hallucinated, duplicate, or irrelevant AI outputs before display
+- **Modular Design**: Core filtering, AI augmentation, and validators are implemented as independent components
+- **Prompt Variants**: Three built-in modes, base, time-focused, and topic-focused, let users explore different recommendation styles
 
 ## LLM Preferences (Hardwired)
+The AI is guided by these embedded assumptions in the prompt logic:
+- Base Prompt: Recommends courses with general similarity in department, topic, and meeting time.
+- Time-Focused Prompt: Prefers courses held at the same time as the inputed course.
+- Topic-Focused Prompt: Prioritizes conceptual or thematic overlap in titles and keywords.
+- Similarity Bias: Values overlap more than diversity (suggests “like with like”).
+- Title-Driven Reasoning: Infers relevance mainly from course titles and tags, not full descriptions.
 
-The AI uses these built-in preferences:
-- Exercise activities: Morning (6:00 AM - 10:00 AM)
-- Study/Classes: Focused hours (9:00 AM - 5:00 PM)
-- Meals: Regular intervals (breakfast 7-9 AM, lunch 12-1 PM, dinner 6-8 PM)
-- Social/Relaxation: Evenings (6:00 PM - 10:00 PM)
-- Avoid: Demanding activities after 10:00 PM
 
-## Troubleshooting
-
-### "Could not load config.json"
-- Ensure `config.json` exists with your API key
-- Check JSON format is correct
-
-### "Error calling Gemini API"
-- Verify API key is correct
-- Check internet connection
-- Ensure API access is enabled in Google AI Studio
-
-### Build Issues
-- Use `npm run build` to compile TypeScript
-- Check that all dependencies are installed with `npm install`
-
-## Next Steps
-
-Try extending the DayPlanner:
-- Add weekly scheduling
-- Implement activity categories
-- Add location information
-- Create a web interface
-- Add conflict resolution strategies
-- Implement recurring activities
-
-## Resources
-
-- [Google Generative AI Documentation](https://ai.google.dev/docs)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
