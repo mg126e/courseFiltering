@@ -1,5 +1,4 @@
-# courseFiltering
-This implementation focuses on the core concept of finding courses that allign with the user's needs with both manual and AI-assisted searching.
+# Course Filtering
 
 <br>
 <br>
