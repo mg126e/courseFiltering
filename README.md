@@ -165,7 +165,7 @@ CourseFiltering/
 
 #### Part one Manual
 
-**1 Adding and Removing a single Tag**
+**1. Adding and Removing a single Tag**
 Demonstrates manually adding and removing a single tag:
 
 ```typescript
@@ -179,7 +179,7 @@ courseFilter.removeTag(historyTag);
 
 ```
 
-**2 Adding and Removing multiple Tags**
+**2. Adding and Removing multiple Tags**
 Demonstrates manually adding and removing multiple tags:
 
 ```typescript
@@ -270,13 +270,7 @@ Suggested Alternatives: [
 ]
 ```
 
-
-## Task 3: Add validators to your code
-During testing, I identified three plausible issues in the AI’s output:
-- The model sometimes “hallucinates” non-existent courses, so I added a validator that checks all returned course codes the known dataset and ensures that the course codes and course titles match.
-- It can occasionally return duplicates, so I added a validator that checks for duplicate courses.
-- It could occasionally recommend the same course being queried, so I added a validator that checks for self-referential results.
-
+<br>
 
 **Key Features**
 - **Automated Tag Generation**: System assigns tags from course data (department, distribution, professor, and title keywords)
@@ -293,5 +287,15 @@ The AI is guided by these embedded assumptions in the prompt logic:
 - Topic-Focused Prompt: Prioritizes conceptual or thematic overlap in titles and keywords.
 - Similarity Bias: Values overlap more than diversity (suggests “like with like”).
 - Title-Driven Reasoning: Infers relevance mainly from course titles and tags, not full descriptions.
+
+<br>
+<br>
+
+## Task 5: Add validators to your code
+During testing, I identified three plausible issues in the AI’s output:
+- The model sometimes “hallucinates” non-existent courses, so I added a validator that checks all returned course codes the known dataset and ensures that the course codes and course titles match.
+- It can occasionally return duplicates, so I added a validator that checks for duplicate courses.
+- It could occasionally recommend the same course being queried, so I added a validator that checks for self-referential results.
+
 
 
