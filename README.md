@@ -76,8 +76,8 @@ Each class begins with a set of system assigned tags, and the user begins with a
 
 <br>
 
-![UI Sketch Page 1]([assignments/Images/IMG_0286.jpg](https://github.com/mg126e/61040-portfolio/blob/6cfb35c517c23a1ed032da9dc79b077425afff2e/assignments/Images/IMG_0286.jpg))
-![UI Sketch Page 2]([Images/IMG_0285.jpg](https://github.com/mg126e/61040-portfolio/blob/6cfb35c517c23a1ed032da9dc79b077425afff2e/assignments/Images/IMG_0286.jpg))
+![UI Sketch Page 1]([Images/Sketch1.jpg)
+![UI Sketch Page 2](Images/Sketch2.jpg)
 
 <br>
 
