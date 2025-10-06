@@ -4,7 +4,7 @@ This implementation focuses on the core concept of finding courses that allign w
 <br>
 <br>
 
-**Task 1: Augment the design of a concept**
+## Task 1: Augment the design of a concept
 
 <br>
 
@@ -72,7 +72,7 @@ Each class begins with a set of system assigned tags, and the user begins with a
 <br>
 <br>
 
-**Task 2: Design the user interaction**
+## Task 2: Design the user interaction
 
 <br>
 
@@ -87,7 +87,7 @@ A Wellesley student navigates to the filter drop down next to the search bar and
 
 The student clicks on a course to view the professor’s rating and the distribution requirements the course satisfies (page 2). Liking the course, they click it to add it to their schedule. After reviewing their schedule, they add three more courses, leaving a full load of four. As a freshman, they worry about not getting into their preferred history class. They click on the class in their schedule (page 1), and look at the pop up (page 2) where the AI sidebar suggests backup options that fit their requirements and time slots. They add one as an alternative, feeling more confident that they’ll have a solid schedule even if their first choice fills up.
 
-**Task 3: Implement your concept**
+## Task 3: Implement your concept
 [Augmented Concept](courseFiltering.ts)
 [Driver with Test cases](courseFiltering_tests.ts)
 [Concpet Specification](couseFiltering.spec)
@@ -97,7 +97,7 @@ Implementation details below based on template README:
 <br>
 <br>
 
-## Concept: Course Filtering
+**Concept: Course Filtering**
 
 **Purpose**: Enables users to efficiently locate courses relevant to their academic goals by narrowing down a large collection into a manageable set based on categories. 
 **Principle**: Each class begins with a set of system assigned tags, and the user begins with 
@@ -108,14 +108,14 @@ classes matching all selected tags. The user can then clear the filters to remov
 In addition to manual filtering, the user may select a course and invoke AI to suggest 
 alternative courses that share overlapping tags.
 
-### Core State
+**Core State**
 - **Courses**: set of tags and attributes like title and professor
 - **Tags**: set of categories with names and ids
 - **A set of Active tags**: a set of tags that the user selected
 - **A set of Filtered courses**: a set of courses that align with the selected tags
 - **A set of Suggested courses**: a set of courses that Gemini has suggested based on a user selected course
 
-### Core Actions
+**Core Actions**
 - `AddTag (t: Tag)`
 - `RemoveTag (t: Tag)`
 - `ClearTags()`
@@ -123,14 +123,14 @@ alternative courses that share overlapping tags.
 
 
 
-## Prerequisites
+**Prerequisites**
 
 - **Node.js** (version 14 or higher)
 - **TypeScript** 
 - **Google Gemini API Key**
 
 
-### 3. To run the Application
+** To run the Application**
 
 **Run all test cases:**
 ```bash
@@ -144,7 +144,7 @@ npm run llm       # LLM-assisted suggestions only
 npm run mixed     # Mixed manual filtering + LLM course suggestions
 ```
 
-## File Structure
+**File Structure**
 
 ```
 CourseFiltering/
@@ -158,12 +158,12 @@ CourseFiltering/
 └── README.md                 # This file
 ```
 
-## Test Cases
+## Task 4: Explore richer test cases and prompts
 
 
-### Part one Manual
+#### Part one Manual
 
-#### 1 Adding and Removing a single Tag
+**1 Adding and Removing a single Tag**
 Demonstrates manually adding and removing a single tag:
 
 ```typescript
@@ -177,7 +177,7 @@ courseFilter.removeTag(historyTag);
 
 ```
 
-#### 2 Adding and Removing multiple Tags
+**2 Adding and Removing multiple Tags**
 Demonstrates manually adding and removing multiple tags:
 
 ```typescript
@@ -193,9 +193,9 @@ courseFilter.clearTags();
 ```
 
 
-### Part 2 LLM-Assisted Suggestions
+#### Part 2 LLM-Assisted Suggestions
 
-#### 1. Base
+**1. Base**
 Shows Ai suggested courses with a hardwired preference for no prioritization of one quality over another:
 
 ```typescript
@@ -205,7 +205,7 @@ const suggestions = await courseFilter.suggestAlternatives(courseToSuggest, llm,
 
 My approach in this test was to evaluate how the AI performed with a neutral, general prompt that simply asked for courses “most similar in topic or content.” The LLM produced several suggestions, but many came from unrelated contexts, such as matching a course in english with a course in Chinese. This showed that without explicit guidance, the AI tended to rely on superficial or random overlaps in wording rather than meaningful academic similarity. While the results demonstrated that the base prompt can produce syntactically valid suggestions, it lacked consistent relevance. The main issue remaining is that the model needs clearer constraints to anchor similarity around shared tags or academic categories.
 
-#### 2. Meeting Time
+**2. Meeting Time**
 Shows Ai suggested courses with hardwired preference for prioritization of similar meeting times:
 
 ```typescript
@@ -215,7 +215,7 @@ const suggestions = await courseFilter.suggestAlternatives(courseToSuggest, llm,
 
 For this variant, I modified the prompt to emphasize scheduling similarity, asking the AI to find courses that met at the same time and the same days. This approach worked in that the AI successfully returned courses that fit the same time window, demonstrating that it could reason about temporal patterns when provided with that context. However, several of the recommended courses were unrelated in subject matter—often pairing classes from different departments. This revealed a tradeoff between practical scheduling alignment and thematic relevance. The issue that remains is how to balance both dimensions in a single reasoning step, so that time alignment doesn’t overshadow academic similarity.
 
-#### 3. Topic
+**3. Topic**
 Shows Ai suggested courses with hardwired preference for prioritization of similar topics:
 
 ```typescript
@@ -225,7 +225,7 @@ const suggestions = await courseFilter.suggestAlternatives(courseToSuggest, llm,
 In this version, I asked the LLM to prioritize conceptual and thematic overlap, directing it to focus on shared keywords or course topics. This produced the most academically appropriate alternatives, as the AI selected courses that clearly connected by theme or subject area. However, some suggested courses were scheduled at completely different times, which would make them impractical as alternatives in a real scheduling scenario. This suggests that while topic-driven reasoning improves academic alignment, it ignores logistical considerations.
 
 
-## Sample Output for Part 1
+**Sample Output for Part 1**
 
 ```
 Active tags: [
@@ -259,7 +259,7 @@ Filtered courses: [
 ]
 ```
 
-## Sample Output for Part 2
+**Sample Output for Part 2**
 ```
 Suggested Alternatives: [
   'Introduction to Classical Chinese (CHIN 310) (MR - 3:45 PM - 5:00 PM)',
@@ -269,14 +269,14 @@ Suggested Alternatives: [
 ```
 
 
-## Validators
+## Task 3: Add validators to your code
 During testing, I identified three plausible issues in the AI’s output:
 - The model sometimes “hallucinates” non-existent courses, so I added a validator that checks all returned course codes the known dataset and ensures that the course codes and course titles match.
 - It can occasionally return duplicates, so I added a validator that checks for duplicate courses.
 - It could occasionally recommend the same course being queried, so I added a validator that checks for self-referential results.
 
 
-## Key Features
+**Key Features**
 - **Automated Tag Generation**: System assigns tags from course data (department, distribution, professor, and title keywords)
 - **Dynamic Filtering**: Users can add or remove tags to instantly refine visible courses
 - **AI Integration**: Augmented suggestAlternatives action calls Gemini to recommend similar courses
@@ -284,7 +284,7 @@ During testing, I identified three plausible issues in the AI’s output:
 - **Modular Design**: Core filtering, AI augmentation, and validators are implemented as independent components
 - **Prompt Variants**: Three built-in modes, base, time-focused, and topic-focused, let users explore different recommendation styles
 
-## LLM Preferences (Hardwired)
+**LLM Preferences (Hardwired)**
 The AI is guided by these embedded assumptions in the prompt logic:
 - Base Prompt: Recommends courses with general similarity in department, topic, and meeting time.
 - Time-Focused Prompt: Prefers courses held at the same time as the inputed course.
