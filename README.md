@@ -87,9 +87,11 @@ A Wellesley student navigates to the filter drop down next to the search bar and
 
 The student clicks on a course to view the professor’s rating and the distribution requirements the course satisfies (page 2). Liking the course, they click it to add it to their schedule. After reviewing their schedule, they add three more courses, leaving a full load of four. As a freshman, they worry about not getting into their preferred history class. They click on the class in their schedule (page 1), and look at the pop up (page 2) where the AI sidebar suggests backup options that fit their requirements and time slots. They add one as an alternative, feeling more confident that they’ll have a solid schedule even if their first choice fills up.
 
+<br>
+
 ## Task 3: Implement your concept
-[Augmented Concept](courseFiltering.ts)
-[Driver with Test cases](courseFiltering_tests.ts)
+[Augmented Concept](courseFiltering.ts)\
+[Driver with Test cases](courseFiltering_tests.ts)\
 [Concpet Specification](couseFiltering.spec)
 
 Implementation details below based on template README:
