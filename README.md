@@ -1,6 +1,9 @@
 # courseFiltering
 This implementation focuses on the core concept of finding courses that allign with the user's needs with both manual and AI-assisted searching.
 
+<br>
+<br>
+
 **Task 1: Augment the design of a concept**
 
 <br>
