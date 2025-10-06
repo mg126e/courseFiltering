@@ -79,6 +79,11 @@ Each class begins with a set of system assigned tags, and the user begins with a
 ![UI Sketch Page 2](Images/Sketch2.jpg)
 
 <br>
+If something were to go wrong with the Ai suggested courses, no courses would populate in the suggestion bar and it would be blank.
+
+<br>
+<br>
+<br>
 
 **User Journey**
 
