@@ -132,7 +132,7 @@ alternative courses that share overlapping tags.
 - **Google Gemini API Key**
 
 
-** To run the Application**
+**To run the Application**
 
 **Run all test cases:**
 ```bash
