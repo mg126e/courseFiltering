@@ -1,8 +1,9 @@
 /**
  * LLM Integration for DayPlanner
  * 
- * Handles the requestAssignmentsFromLLM functionality using Google's Gemini API.
- * The LLM prompt is hardwired with user preferences and doesn't take external hints.
+ * Handles the suggestAlternatives functionality using Google's Gemini API.
+ * The LLM prompt is hardwired with user preferences in the terms of the prompt variant
+ * and doesn't take external hints.
  */
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -26,12 +27,13 @@ export class GeminiLLM {
             // Initialize Gemini AI
             const genAI = new GoogleGenerativeAI(this.apiKey);
             const model = genAI.getGenerativeModel({ 
-                model: "gemini-2.5-flash-lite",
-                generationConfig: {
-                    maxOutputTokens: 1000,
-                }
+                model: "gemini-2.5-pro",
+
             });
             // Execute the LLM
+            
+            // Not printing out the prompt due to large amount of course information given to LLM via the prompt
+            // console.log(prompt);
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const text = response.text();

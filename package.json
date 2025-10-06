@@ -1,19 +1,20 @@
 {
   "name": "gemini-schedule-demo",
   "version": "1.0.0",
-  "description": "A demo application showing how to use Google's Gemini API to create student schedules",
-  "main": "dist/dayplanner-tests.js",
+  "description": "Aa application that filters courses based on user-selected tags and suggests alternative courses using Google's Gemini API.",
+  "main": "dist/courseFiltering_tests.ts",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/dayplanner-tests.js",
-    "dev": "ts-node --transpile-only dayplanner-tests.ts",
-    "test": "npm run build && node dist/dayplanner-tests.js",
-    "manual": "npm run build && node -e \"require('./dist/dayplanner-tests.js').testManualScheduling()\"",
-    "llm": "npm run build && node -e \"require('./dist/dayplanner-tests.js').testLLMScheduling()\"",
-    "mixed": "npm run build && node -e \"require('./dist/dayplanner-tests.js').testMixedScheduling()\""
+    "start": "npm run build && node dist/courseFiltering_tests.js",
+    "dev": "ts-node --transpile-only courseFiltering_tests.ts",
+    "test": "npm run build && node dist/courseFiltering_tests.ts",
+    "manual": "npm run build && node -e \"require('./dist/courseFiltering_tests.ts').testManualFilters()\"",
+    "llm": "npm run build && node -e \"require('./dist/courseFiltering_tests.ts').testAISuggestions()\"",
+    "mixed": "npm run build && node dist/courseFiltering_tests.js"
+  
   },
-  "keywords": ["gemini", "ai", "schedule", "student", "demo", "typescript"],
-  "author": "Student Demo",
+  "keywords": ["gemini", "ai", "course", "student", "schedule", "typescript"],
+  "author": "Marin Gray",
   "license": "MIT",
   "dependencies": {
     "@google/generative-ai": "^0.21.0"

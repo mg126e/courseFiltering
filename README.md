@@ -1,6 +1,9 @@
 # courseFiltering
 This implementation focuses on the core concept of finding courses that allign with the user's needs with both manual and AI-assisted searching.
 
+<br>
+<br>
+
 ## Concept: Course Filtering
 
 **Purpose**: Enables users to efficiently locate courses relevant to their academic goals by narrowing down a large collection into a manageable set based on categories. 
