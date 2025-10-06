@@ -76,7 +76,7 @@ Each class begins with a set of system assigned tags, and the user begins with a
 
 <br>
 
-![UI Sketch Page 1]([Images/Sketch1.jpg)
+![UI Sketch Page 1](Images/Sketch1.jpg)
 ![UI Sketch Page 2](Images/Sketch2.jpg)
 
 <br>
